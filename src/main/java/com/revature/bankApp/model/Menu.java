@@ -9,94 +9,96 @@ import com.revature.bankApp.repository.*;
 public class Menu {
 
 	public static void main(String[] args) {
-		
-		//CustomerDao cdao = new CustomerDao();
-		
-		
-		/*cdao.addCustomer(3, "Mckenna Rees", "rees", 9753);
-		
-		
-		System.out.println("Finished");*/
-
-
-		Accounts a;
-		Scanner sc = new Scanner(System.in);
-
-		//PendingAccounts.openPendingAccounts();
-		//Accounts.openActiveAccounts();
-		//PendingAccounts.initClass();
-		//AccountHolder.init(); // Not keeping saved array list of active employees.
-		//Employee systemAdmin = new Employee();
+		boolean exit = false;
+		int option;
+		Scanner scOption = new Scanner(System.in);
+		Scanner scInput = new Scanner(System.in);
 
 		System.out.println("\nWelcome to your BankApp!");
-		System.out.println("Please select an input option below.\n");
-		System.out.println("Login (1)\nApply for an account (2)\nEmployee Login (3)");
-		System.out.println("\nExit App (0)");
 
-		int option = sc.nextInt();
+		while (!exit) {
+			System.out.println("Please select an input option below.\n");
+			System.out.println("Login (1)\nApply for an account (2)\nEmployee Login (3)");
+			System.out.println("\nExit App (0)");
+			
+			
+			option = scOption.nextInt();
+			
+			switch (option) {
+			case 1:
+				login(scInput);
+				break;
+			case 2:
+				apply(scInput);
+				break;
+			case 3:
+				employeeLogin(scInput);
+				break;
+			case 0:
+				System.out.println("Exiting...");
+				break;
+			default:
+				System.out.println("Invalid Option.");
+			}
+			exit = true;
+		}
 
-		if (option == 1)
-			login(sc);
-		else if (option == 2)
-			apply(sc);
-		else if (option == 3)
-			employeeLogin(sc);
-		else if (option == 0)
-			System.out.println("Exiting...");
-		else // Create loop to restart this menu.
-			System.out.println("Please enter a valid option.");
-
-		// System.out.println("Pending Customers:");
-		// PendingAccounts.viewPendingCustomers();
-		// System.out.println("Active Customers:");
-		// AccountHolder.viewActiveCustomers();
-		PendingAccounts.closePendingAccounts();
-		AccountHolder.serialize();
-		Accounts.closeAccountsList();
-		sc.close();
-
+		scOption.close();
+		scInput.close();
 	}
 
 	static void login(Scanner sc) {
 		CustomerDao cdao = new CustomerDao();
 		System.out.println("User Login.");
-		
+
 		System.out.println("Please enter your username: ");
 		String username = sc.next();
 		System.out.println("Please enter your password: ");
 		String password = sc.next();
-		
+
 		boolean isCustomer = cdao.verifyLogin(username, password);
-		
+
 		if (isCustomer == true) {
 			System.out.println("Login Successful!");
-			//AccountHolder c = new AccountHolder();
 			AccountHolder.thingsToDo(username);
-			
 		}
-		//AccountHolder.thingsToDo();
 	}
 
 	static void apply(Scanner sc) {
-
-		/*System.out.println("Applying for account.");
-		System.out.println("Please enter your first name: ");
-		String fname = sc.next();
-		System.out.println("Please enter your last name: ");
-		String lname = sc.next();
-		System.out.println("Please enter your preferred username: ");
-		String userName = sc.next();
-
-		new AccountHolder(fname, lname, userName, password);*/
-		
+		boolean usernameExists = true;
+		String username;
+		String password;
+		String name;
+		CustomerDao cdao = new CustomerDao();
 		PendingAccountsDao pdao = new PendingAccountsDao();
-		pdao.addPendingAccount("bobbyD", "password");
-		System.out.println("Thank you, you application is being processed.");
 
+		System.out.println("Applying for account.");
+
+		while (usernameExists) {
+			System.out.print("Please enter your preferred username: ");
+			username = sc.next();
+			usernameExists = cdao.checkUsernames(username);
+			if (!usernameExists) {
+				usernameExists = pdao.checkUsernames(username);
+				if (!usernameExists) {
+					System.out.print("\nPlease choose a password: ");
+					password = sc.next();
+					System.out.print("\nPlease enter your first name: ");
+					String fname = sc.next();
+					System.out.print("\nPlease enter your last name: ");
+					String lname = sc.next();
+					name = fname + " " + lname;
+					pdao.addPendingAccount(username, password, name);
+					System.out.println("Thank you, you application is being processed.");
+				} else
+					System.out.println("Username taken, please try again.\n");
+			} else
+				System.out.println("Username taken, please try again.\n");
+		}
 	}
 
 	static void employeeLogin(Scanner sc) {
-		
+
 		EmployeeDao edao = new EmployeeDao();
 
 		System.out.println("Employee Login.");
@@ -105,20 +107,11 @@ public class Menu {
 		System.out.println("Please enter your password: ");
 		String password = sc.next();
 
-		//boolean isEmployee = Employee.verifyEmployeeCredentials(username, password);
 		boolean isEmployee = edao.verifyLogin(username, password);
-		
+
 		if (isEmployee == true) {
 			System.out.println("Login Successful!");
-			Employee e = new Employee();
-			e.thingsToDo(e);
-			
+			Employee.thingsToDo(username);
 		}
-		
-
-		 //Employee.viewEmployees(); 
-		 //System.out.println(e.isAdmin());
-		 
-
 	}
 }

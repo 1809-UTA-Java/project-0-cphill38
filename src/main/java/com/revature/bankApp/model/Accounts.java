@@ -48,26 +48,26 @@ public class Accounts implements Serializable {
 		}
 	}
 
-	public static boolean withdrawl(int accountNum, double amountToWithdrawl) {
+	public static boolean withdraw(int accountNum, double amountToWithdraw) {
 		AccountsDao adao = new AccountsDao();
 		
-		if (amountToWithdrawl < 0) {
-			System.out.println("Ammount to withdrawl should be a greater than $0.00.");
+		if (amountToWithdraw < 0) {
+			System.out.println("Ammount to withdraw should be a greater than $0.00.");
 			return false;
-		} else if (adao.getBalance(accountNum) - amountToWithdrawl < 0) {
-			System.out.println("Cannot withdrawl that amount. Available balance is $" + adao.getBalance(accountNum));
+		} else if (adao.getBalance(accountNum) - amountToWithdraw < 0) {
+			System.out.println("Cannot withdraw that amount. Available balance is $" + adao.getBalance(accountNum));
 			return false;
 		} else {
-			double balance = adao.getBalance(accountNum) - amountToWithdrawl;
+			double balance = adao.getBalance(accountNum) - amountToWithdraw;
 			adao.updateBalance(accountNum, balance);
-			System.out.println("Withdrawl successful: Available balance is $" + adao.getBalance(accountNum));
+			System.out.println("Withdraw successful: Available balance is $" + adao.getBalance(accountNum));
 			return true;
 		}
 
 	}
 
 	public static void transferFunds(int accountOut, int accountIn, double amount) {
-		boolean success = withdrawl(accountOut, amount);
+		boolean success = withdraw(accountOut, amount);
 		if(success)
 			deposit(accountIn, amount);
 

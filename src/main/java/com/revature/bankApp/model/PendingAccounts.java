@@ -53,12 +53,12 @@ public class PendingAccounts implements Serializable {
 	 * }
 	 */
 
-	static void viewPendingCustomers() {
-		Iterator<AccountHolder> iterator = singleObj.pendingCustomers.iterator();
-		while (iterator.hasNext()) {
-			AccountHolder.viewPendingCustomers(iterator.next());
-		}
-	}
+//	static void viewPendingCustomers() {
+//		Iterator<AccountHolder> iterator = singleObj.pendingCustomers.iterator();
+//		while (iterator.hasNext()) {
+//			AccountHolder.viewPendingCustomers(iterator.next());
+//		}
+//	}
 	
 	/*static AccountHolder getPendingCustomers(String username) {
 		Object obj = null;

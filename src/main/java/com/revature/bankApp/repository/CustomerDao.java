@@ -93,6 +93,23 @@ public class CustomerDao {
 			ex.getMessage();
 		}
 	}
+	
+	public void addCustomer(int custID, String name, String username, String password) {
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "INSERT INTO Customers (c_id, name, username, password)" + " VALUES (" + custID + ", '" + name
+					+ "', '" + username + "', '" + password + "')";
+			ps = conn.prepareStatement(sql);
+			ps.executeQuery();
+
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
 
 	public boolean verifyLogin(String username, String password) {
 
@@ -123,6 +140,50 @@ public class CustomerDao {
 		}
 
 		return login;
+	}
+	
+	public void removeAccount(int accountNum) {
+
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "UPDATE CUSTOMERS SET account=NULL WHERE account=" + accountNum;
+			
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
+	
+	public boolean checkUsernames(String username) {
+		PreparedStatement ps = null;
+		boolean duplicate = true;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "SELECT * FROM CUSTOMERS " + "WHERE username='" + username + "'";
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			if(rs.next()) 
+				duplicate = true;
+			else
+				duplicate = false;
+			
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+
+		return duplicate;
 	}
 
 }

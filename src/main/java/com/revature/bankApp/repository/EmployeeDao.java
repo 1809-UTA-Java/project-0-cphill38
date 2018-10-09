@@ -4,12 +4,15 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import com.revature.bankApp.model.AccountHolder;
 import com.revature.bankApp.model.Employee;
 import com.revature.bankApp.util.ConnectionUtil;
 
 import java.math.*;
 
 public class EmployeeDao implements Cloneable, Serializable {
+	
+	boolean admin = false;
 
 	/**
 	 * Persistent Instance variables. This data is directly mapped to the columns of
@@ -19,6 +22,7 @@ public class EmployeeDao implements Cloneable, Serializable {
 	private String employeeID;
 	private String userName;
 	private String password;
+	private boolean isAdmin;
 
 	/**
 	 * Non-persistent Instance variables. These are not mapped to database table,
@@ -138,8 +142,42 @@ public class EmployeeDao implements Cloneable, Serializable {
 			ex.getMessage();
 		} catch (IOException ex) {
 			ex.getMessage();
+		}		
+	}
+	
+	public List<Employee> getEmployee(String username) {
+		PreparedStatement ps = null;
+		Employee e = null;
+		List<Employee> employee = new ArrayList<>();
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "SELECT * FROM EMPLOYEES " + "WHERE username='" + username + "'";
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				int id = rs.getInt("e_id");
+				String name = rs.getString("name");
+				String uname = rs.getString("username");
+				String password = rs.getString("password");
+				String isAdmin = rs.getString("admin");
+				if(rs.wasNull())
+					admin = false;
+				else
+					admin = true;
+
+				e = new Employee(id, name, uname, password, admin);
+				employee.add(e);
+			}
+
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
 		}
 
-		
+		return employee;
 	}
 }

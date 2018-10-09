@@ -153,5 +153,24 @@ public class AccountsDao implements Cloneable, Serializable {
 
 		return balance;
 	}
+	
+	public void deleteAccount(int accountNum) {
 
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "DELETE FROM ACCOUNTS WHERE a_id=" + accountNum;
+			
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
+	
 }
