@@ -15,12 +15,7 @@ public class Menu {
 		
 		/*cdao.addCustomer(3, "Mckenna Rees", "rees", 9753);
 		
-		List<AccountHolder> customers = cdao.getCustomers();
-		if(customers.isEmpty())
-			System.out.println("No customers.");
-		for (AccountHolder a : customers) {
-			System.out.println(a.toString());
-		}
+		
 		System.out.println("Finished");*/
 
 
@@ -84,7 +79,7 @@ public class Menu {
 
 	static void apply(Scanner sc) {
 
-		System.out.println("Applying for account.");
+		/*System.out.println("Applying for account.");
 		System.out.println("Please enter your first name: ");
 		String fname = sc.next();
 		System.out.println("Please enter your last name: ");
@@ -92,7 +87,10 @@ public class Menu {
 		System.out.println("Please enter your preferred username: ");
 		String userName = sc.next();
 
-		new AccountHolder(fname, lname, userName);
+		new AccountHolder(fname, lname, userName, password);*/
+		
+		PendingAccountsDao pdao = new PendingAccountsDao();
+		pdao.addPendingAccount("bobbyD", "password");
 		System.out.println("Thank you, you application is being processed.");
 
 	}

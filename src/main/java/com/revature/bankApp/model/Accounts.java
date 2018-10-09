@@ -13,93 +13,67 @@ import java.util.Iterator;
 import java.util.Map;
 //import java.util.Map.Entry;
 
-public class Accounts implements Serializable{
+import com.revature.bankApp.repository.AccountsDao;
 
+public class Accounts implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int accountID;
-	private String accountHoldersUsername;
+	// private String accountHoldersUsername;
 	private double balance;
 	private static ArrayList<Accounts> activeAccounts = new ArrayList<>();
 	private static String filename = "AccountsList";
 
-	public Accounts(int accountID, String username) {
+	public Accounts(int accountID, double balance) {
+		super();
 		this.accountID = accountID;
-		this.accountHoldersUsername = username;
-		activeAccounts.add(this);
+		this.balance = balance;
 	}
-	
+
 	public Accounts() {
-		//Creating a master object to serialize.
+		super();
 	}
 
-	private static Accounts locateAccount(int usersID) {
-		Accounts obj = null;
-		Iterator<Accounts> iterator = activeAccounts.iterator();
-		while (iterator.hasNext()) {
-			obj = iterator.next();
-			if (iterator.next().accountID == usersID) {
-				break;
-			}
-		}
-		return obj;
-	}
 
-	public static void deposit(int usersID, double amountToDeposit) {
-		Accounts accountToDeposit;
-		accountToDeposit = locateAccount(usersID);
-		accountToDeposit.balance += amountToDeposit;
-		System.out.println("Deposit Successful: Available balance is $" + accountToDeposit.balance);
+	public static void deposit(int accountNum, double amountToDeposit) {
 
-	}
+		AccountsDao adao = new AccountsDao();
 
-	public static void withdrawl(int usersID, double amountToWithdrawl) {
-		Accounts accountToWithdrawl;
-		accountToWithdrawl = locateAccount(usersID);
-		if (amountToWithdrawl < 0) {
-			System.out.println("Ammount to wiithdrawl should be a positive number.");
-		} else if (accountToWithdrawl.balance - amountToWithdrawl < 0) {
-			System.out.println("Cannot withdrawl that amount. Available balance is $" + accountToWithdrawl.balance);
+		if (amountToDeposit < 0) {
+			System.out.println("Ammount to deposit should be greater than $0.00.");
 		} else {
-			accountToWithdrawl.balance -= amountToWithdrawl;
-			System.out.println("Withdrawl successful: Available balance is $" + accountToWithdrawl.balance);
+			double balance = adao.getBalance(accountNum) + amountToDeposit;
+			adao.updateBalance(accountNum, balance);
+			System.out.println("Deposit Successful: Available balance is $" + adao.getBalance(accountNum));
 		}
-
 	}
 
-	public static void transferFunds(int transferOut, int transferIn, double amount) {
-		Accounts account;
-		account = locateAccount(transferOut);
-		boolean success = transferOut(account, amount);
-		if (success == true) {
-			account = locateAccount(transferIn);
-			transferIn(account, amount);
-		} else if (success == false)
-			System.out.println("Transfer unsuccessful.");
+	public static boolean withdrawl(int accountNum, double amountToWithdrawl) {
+		AccountsDao adao = new AccountsDao();
 		
-
-	}
-
-	private static boolean transferOut(Accounts account, double amount) {
-		if (amount < 0) {
-			System.out.println("Ammount to transfer should be a positive number.");
+		if (amountToWithdrawl < 0) {
+			System.out.println("Ammount to withdrawl should be a greater than $0.00.");
 			return false;
-		} else if (account.balance - amount < 0) {
-			System.out.println("Cannot transfer that amount. Available balance is $" + account.balance);
+		} else if (adao.getBalance(accountNum) - amountToWithdrawl < 0) {
+			System.out.println("Cannot withdrawl that amount. Available balance is $" + adao.getBalance(accountNum));
 			return false;
 		} else {
-			account.balance -= amount;
-			System.out.println("Available balance is $" + account.balance);
+			double balance = adao.getBalance(accountNum) - amountToWithdrawl;
+			adao.updateBalance(accountNum, balance);
+			System.out.println("Withdrawl successful: Available balance is $" + adao.getBalance(accountNum));
 			return true;
 		}
-	}
-
-	private static void transferIn(Accounts account, double amount) {
-		account.balance += amount;
-		System.out.println("Available balance for account " + account + " is $" + account.balance);
 
 	}
-	
+
+	public static void transferFunds(int accountOut, int accountIn, double amount) {
+		boolean success = withdrawl(accountOut, amount);
+		if(success)
+			deposit(accountIn, amount);
+
+	}
+
+
 	public static void closeAccountsList() {
 		Accounts master = new Accounts();
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
@@ -108,12 +82,12 @@ public class Accounts implements Serializable{
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public static void openActiveAccounts() {
 		Accounts master;
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
 			Object obj = ois.readObject();
-			 master = (Accounts) obj;
+			master = (Accounts) obj;
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {
@@ -122,5 +96,12 @@ public class Accounts implements Serializable{
 			ex.printStackTrace();
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "Accounts [accountID=" + accountID + ", balance=" + balance + "]";
+	}
+	
+	
 
 }

@@ -48,14 +48,14 @@ public class AccountHolder implements Serializable {
 		this.password = password;
 	}
 
-	private AccountHolder(String fname, String lname, int accountNum) {
+	/*private AccountHolder(String fname, String lname, int accountNum) {
 		this.fname = fname;
 		this.lname = lname;
 		this.accountNum = accountNum;
 		customers.add(this);
 		Accounts newAccount = new Accounts(accountNum, "username");
 
-	}
+	}*/
 
 	/*
 	 * private AccountHolder() {
@@ -109,12 +109,16 @@ public class AccountHolder implements Serializable {
 	}
 
 	public static void thingsToDo(String username) {
+		//AccountHolder a;
 
 		System.out.println("Inside menu for customers");
 		CustomerDao cdao = new CustomerDao();
 		List<AccountHolder> customer = cdao.getCustomer(username);
-		for(AccountHolder a : customer)
+		for(AccountHolder a : customer) {
 			System.out.println(a.toString());
+			//Accounts.deposit(a.accountNum, 50.00);
+			Accounts.transferFunds(a.accountNum, 3847, 150.00);
+		}
 	
 		//Accounts.deposit(100047, 1000);
 		//Accounts.withdrawl(100047, 500);

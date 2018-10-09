@@ -44,15 +44,14 @@ public class CustomerDao {
 
 		return customers;
 	}
-	
+
 	public List<AccountHolder> getCustomer(String username) {
 		PreparedStatement ps = null;
 		AccountHolder c = null;
 		List<AccountHolder> customer = new ArrayList<>();
 
 		try (Connection conn = ConnectionUtil.getConnection()) {
-			String sql = "SELECT * FROM CUSTOMERS "
-					   + "WHERE username='" + username + "'";
+			String sql = "SELECT * FROM CUSTOMERS " + "WHERE username='" + username + "'";
 			ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 
@@ -94,28 +93,27 @@ public class CustomerDao {
 			ex.getMessage();
 		}
 	}
-	
+
 	public boolean verifyLogin(String username, String password) {
-		
+
 		boolean login = false;
 		PreparedStatement ps = null;
 
 		try (Connection conn = ConnectionUtil.getConnection()) {
-			String sql = "SELECT * FROM CUSTOMERS "
-					   + "WHERE username='" + username + "'";
+			String sql = "SELECT * FROM CUSTOMERS " + "WHERE username='" + username + "'";
 			ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
-			
-			if(!rs.next())
+
+			if (!rs.next())
 				System.out.println("Username not found");
 			else {
 				String pw = rs.getString("password");
-				if(pw.equals(password))
+				if (pw.equals(password))
 					login = true;
 				else
 					System.out.println("username/password combination incorrect.");
 			}
-			
+
 			rs.close();
 			ps.close();
 		} catch (SQLException ex) {

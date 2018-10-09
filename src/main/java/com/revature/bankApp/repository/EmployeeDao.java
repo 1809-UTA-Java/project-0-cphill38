@@ -115,4 +115,31 @@ public class EmployeeDao implements Cloneable, Serializable {
 
 		return login;
 	}
+	
+	public void viewCustomerInfo(int custID) {
+		
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "SELECT * FROM Customers "
+					   + "INNER JOIN ACCOUNTS ON "
+					   + "Customers.account=Account.a_id "
+					   + "WHERE Customers.c_id=" + custID;
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+			}
+				
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+
+		
+	}
 }

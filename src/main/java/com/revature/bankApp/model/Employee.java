@@ -2,7 +2,10 @@ package com.revature.bankApp.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
+
+import com.revature.bankApp.repository.*;
 
 public class Employee {
 
@@ -84,6 +87,10 @@ public class Employee {
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("Inside Things to Do for Employees");
+		viewCustomers();
+		viewAccounts();
+		
+		//adao.createAccount(2387, 200.00);
 		//Approve new customer options
 		/*viewPendingAccounts();
 		System.out.println("Which pending customer would you like to approve?");
@@ -121,5 +128,31 @@ public class Employee {
 
 	private void addCustomer(AccountHolder customer) {
 		//customers.add(customer);
+	}
+	
+	private void viewCustomers() {
+		
+		CustomerDao cdao = new CustomerDao();
+		
+		List<AccountHolder> customers = cdao.getCustomers();
+		if(customers.isEmpty())
+			System.out.println("No customers.");
+		for (AccountHolder a : customers) {
+			System.out.println(a.toString());
+		}
+		
+	}
+	
+	private void viewAccounts() {
+		
+		AccountsDao adao = new AccountsDao();
+		
+		List<Accounts> accounts = adao.getAccounts();
+		if(accounts.isEmpty())
+			System.out.println("No customers.");
+		for (Accounts a : accounts) {
+			System.out.println(a.toString());
+		}
+		
 	}
 }
