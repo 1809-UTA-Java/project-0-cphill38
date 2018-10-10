@@ -185,5 +185,24 @@ public class CustomerDao {
 
 		return duplicate;
 	}
+	
+	public void linkAccount(int accountID, int custID) {
+		
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "UPDATE CUSTOMERS SET account=" + accountID + " WHERE c_id=" + custID;
+			
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
 
 }

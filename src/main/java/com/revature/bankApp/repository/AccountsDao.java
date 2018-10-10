@@ -180,4 +180,41 @@ public class AccountsDao implements Cloneable, Serializable {
 		}
 	}
 	
+	public void removeLinks(int accountNum) {
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "DELETE FROM ACCOUNT_CUSTOMER_LIST WHERE a_id=" + accountNum;
+			
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
+	
+	public void linkAccounts(int accountID, int custID) {
+		
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "INSERT INTO ACCOUNT_CUSTOMER_LIST VALUES (" + accountID + ", " + custID + ")";
+			
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			rs.close();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
+	
 }

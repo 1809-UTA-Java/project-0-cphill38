@@ -53,7 +53,7 @@ public class Employee {
 				System.out.println("View Customers (1)\nView Accounts (2)\nView Customer Applications (3)"
 						+ "\nApprove Application (4)\nDeny Application (5)\n"
 						+ "\n---Admin Options---\nWithdraw Funds (6)\nDeposit Funds (7)"
-						+ "\nTransfer Funds (8)\nCancel Account (9)");
+						+ "\nTransfer Funds (8)\nCancel Account (9)\nCreate Account (10)");
 				System.out.println("\nLogout (0)");
 
 				option = sc.nextInt();
@@ -68,10 +68,10 @@ public class Employee {
 					e.viewApps();
 					break;
 				case 4:
-					e.approveApp(/* username */"");
+					e.approveApp(e, sc);
 					break;
 				case 5:
-					e.denyApp(/* username */"");
+					e.denyApp(e, sc);
 					break;
 				case 6:
 					e.withdrawFunds(e, sc);
@@ -84,6 +84,9 @@ public class Employee {
 					break;
 				case 9:
 					e.cancelAccount(e, sc);
+					break;
+				case 10:
+					e.createNewAccount(e, sc);
 					break;
 				case 0:
 					logout = true;
@@ -173,13 +176,31 @@ public class Employee {
 
 	}
 
-	private void createNewAccount() {
-		CustomerDao cdao = new CustomerDao();
+	private void createNewAccount(Employee e, Scanner sc) {
 		AccountsDao adao = new AccountsDao();
 
-		adao.createAccount(8884, 300.00);
-		cdao.addCustomer(4, "John Doe", "doe", 8884);
+		if (e.isAdmin) {
+			System.out.print("Enter new account number:");
+			int num = sc.nextInt();
+			adao.createAccount(num, 0.00);
+			e.linkAccount(sc, num);
+
+		} else
+			System.out.println("Only admins have access to this feature");
 	}
+
+	private void linkAccount(Scanner sc, int num) {
+		CustomerDao cdao = new CustomerDao();
+		AccountsDao adao = new AccountsDao();
+		
+		System.out.print("Enter customer ID to link:");
+		int id = sc.nextInt();
+		cdao.linkAccount(num, id);
+		adao.linkAccounts(num, id);
+			
+	}
+	
+	//private void linkJointAccounts();
 
 	private void cancelAccount(Employee e, Scanner sc) {
 		AccountsDao adao = new AccountsDao();
@@ -191,6 +212,7 @@ public class Employee {
 			double balance = adao.getBalance(account);
 			Accounts.withdraw(account, balance); // Withdraw remainder of funds in account.
 			cdao.removeAccount(account); // Remove any foreign keys tied to account to cancel
+			adao.removeLinks(account); // Remove any foreign keys from ACCOUNT_CUSTOMER_LIST
 			adao.deleteAccount(account);// Remove account
 
 		} else
@@ -207,20 +229,33 @@ public class Employee {
 		}
 	}
 
-	private void approveApp(String username) {
+	private void approveApp(Employee e, Scanner sc) {
 		PendingAccountsDao pdao = new PendingAccountsDao();
 		CustomerDao cdao = new CustomerDao();
 
+		e.viewApps();
+		System.out.print("Type the username of the customer you\n" + "want to approve:");
+		String username = sc.next();
+		System.out.print("Enter new customers ID:");
+		int id = sc.nextInt();
+
 		List<AccountHolder> newCustomer = pdao.getApplicant(username);
 		for (AccountHolder a : newCustomer) {
-			cdao.addCustomer(5, a.getName(), a.getUsername(), a.getPassword());
+			cdao.addCustomer(id, a.getName(), a.getUsername(), a.getPassword());
 		}
 		pdao.removeApplicant(username);
+
+		System.out.println("Customer Approved Successfully!");
 	}
 
-	private void denyApp(String username) {
+	private void denyApp(Employee e, Scanner sc) {
 		PendingAccountsDao pdao = new PendingAccountsDao();
+
+		e.viewApps();
+		System.out.print("Type the username of the customer to deny:");
+		String username = sc.next();
 		pdao.removeApplicant(username);
+		System.out.println("Application removed.");
 	}
 
 }

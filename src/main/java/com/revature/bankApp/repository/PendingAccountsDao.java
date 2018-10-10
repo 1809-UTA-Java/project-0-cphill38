@@ -18,7 +18,8 @@ public class PendingAccountsDao {
 		PreparedStatement ps = null;
 
 		try (Connection conn = ConnectionUtil.getConnection()) {
-			String sql = "INSERT INTO PEND_ACCOUNTS VALUES ('" + username + "', '" + password + "', '" + name + "')";
+			String sql = "INSERT INTO PEND_ACCOUNTS (username, password, name)"
+					   + " VALUES ('" + username + "', '" + password + "', '" + name + "')";
 
 			ps = conn.prepareStatement(sql);
 			ps.executeQuery();
