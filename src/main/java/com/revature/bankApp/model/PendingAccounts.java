@@ -1,18 +1,18 @@
 package com.revature.bankApp.model;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
+//import java.io.ObjectInputStream;
+//import java.io.ObjectOutputStream;
+//import java.io.Serializable;
+//import java.util.ArrayList;
+//import java.util.Iterator;
 
-public class PendingAccounts implements Serializable {
+public class PendingAccounts {
 
-	static PendingAccounts singleObj;
+	/*static PendingAccounts singleObj;
 	private static final long serialVersionUID = 1L;
 	private static String fileName = "pendingAccounts";
 	ArrayList<AccountHolder> pendingCustomers = new ArrayList<>();
@@ -35,15 +35,15 @@ public class PendingAccounts implements Serializable {
 			return true;
 	}
 
-	/*
+	
 	 * public static PendingAccounts getSingleObj() { return singleObj; }
-	 */
+	 
 
 	static void addPendingCustomer(AccountHolder pendingCustomer) {
 		singleObj.pendingCustomers.add(pendingCustomer);
 	}
 
-	/*
+	
 	 * public static boolean getPendingCustomers() { 
 	 * 	if (singleObj.pendingCustomers.isEmpty()) 
 	 * 		return false; 
@@ -51,7 +51,7 @@ public class PendingAccounts implements Serializable {
 	 * 		return true;
 	 * 
 	 * }
-	 */
+	 
 
 //	static void viewPendingCustomers() {
 //		Iterator<AccountHolder> iterator = singleObj.pendingCustomers.iterator();
@@ -60,7 +60,7 @@ public class PendingAccounts implements Serializable {
 //		}
 //	}
 	
-	/*static AccountHolder getPendingCustomers(String username) {
+	static AccountHolder getPendingCustomers(String username) {
 		Object obj = null;
 		
 		Iterator<AccountHolder> iterator = singleObj.pendingCustomers.iterator();
@@ -69,7 +69,7 @@ public class PendingAccounts implements Serializable {
 		}
 		
 		return (AccountHolder)obj;
-	}*/
+	}
 
 	// Serialize the object before exiting.
 	public static void closePendingAccounts() {
@@ -97,6 +97,6 @@ public class PendingAccounts implements Serializable {
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		}
-	}
+	}*/
 
 }

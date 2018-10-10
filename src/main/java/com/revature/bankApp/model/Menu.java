@@ -1,12 +1,16 @@
 package com.revature.bankApp.model;
 
-import java.util.List;
 import java.util.Scanner;
-import java.io.*;
 
-import com.revature.bankApp.repository.*;
+import org.apache.log4j.Logger;
+
+import com.revature.bankApp.repository.CustomerDao;
+import com.revature.bankApp.repository.EmployeeDao;
+import com.revature.bankApp.repository.PendingAccountsDao;
 
 public class Menu {
+	
+	final static Logger logger = Logger.getLogger(Menu.class);
 
 	public static void main(String[] args) {
 		boolean exit = false;
@@ -48,6 +52,7 @@ public class Menu {
 	}
 
 	static void login(Scanner sc) {
+		logger.info("Entering customer login method");
 		CustomerDao cdao = new CustomerDao();
 		System.out.println("User Login.");
 

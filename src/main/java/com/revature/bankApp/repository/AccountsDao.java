@@ -116,13 +116,20 @@ public class AccountsDao implements Cloneable, Serializable {
 
 	public void updateBalance(int accountID, double newBalance) {
 		PreparedStatement ps = null;
+		//CallableStatement cs = null;
 
 		try (Connection conn = ConnectionUtil.getConnection()) {
 			String sql = "UPDATE ACCOUNTS " + "SET balance = " + newBalance + " WHERE a_id = " + accountID;
 			ps = conn.prepareStatement(sql);
 			ps.executeQuery();
+			
+//			cs = conn.prepareCall("{CALL UPDATE_BALANCE_SP(?, ?)}");
+//			cs.setInt(1, accountID);
+//			cs.setDouble(2, newBalance);
+//			cs.execute();
 
 			ps.close();
+			//cs.close();
 		} catch (SQLException ex) {
 			ex.getMessage();
 		} catch (IOException ex) {
