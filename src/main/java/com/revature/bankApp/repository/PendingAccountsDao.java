@@ -32,6 +32,24 @@ public class PendingAccountsDao {
 		}
 	}
 	
+	public void addPendingAccount(String username, String password, String name, int primary, int joint) {
+		PreparedStatement ps = null;
+
+		try (Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "INSERT INTO PEND_ACCOUNTS VALUES ('" + username + "', '"
+					   + password + "', '" + name + "', " + primary + ", " + joint + ")";
+
+			ps = conn.prepareStatement(sql);
+			ps.executeQuery();
+
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
+	
 	public boolean checkUsernames(String username) {
 		PreparedStatement ps = null;
 		boolean duplicate = true;

@@ -70,6 +70,7 @@ public class Menu {
 	}
 
 	static void apply(Scanner sc) {
+		logger.info("Entering new application method.");
 		boolean usernameExists = true;
 		String username;
 		String password;
@@ -94,7 +95,7 @@ public class Menu {
 					String lname = sc.next();
 					name = fname + " " + lname;
 					pdao.addPendingAccount(username, password, name);
-					System.out.println("Thank you, you application is being processed.");
+					System.out.println("Thank you, your application is being processed.");
 				} else
 					System.out.println("Username taken, please try again.\n");
 			} else
@@ -103,7 +104,7 @@ public class Menu {
 	}
 
 	static void employeeLogin(Scanner sc) {
-
+		logger.info("Entering Employee Login Method.");
 		EmployeeDao edao = new EmployeeDao();
 
 		System.out.println("Employee Login.");

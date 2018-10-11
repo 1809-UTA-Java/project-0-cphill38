@@ -4,7 +4,7 @@ package com.revature.bankApp.model;
 import java.util.List;
 import java.util.Scanner;
 
-import com.revature.bankApp.repository.CustomerDao;
+import com.revature.bankApp.repository.*;
 
 public class AccountHolder {
 
@@ -48,7 +48,7 @@ public class AccountHolder {
 			while (!logout) {
 				System.out.println("\nPlease select an input option below.\n");
 				System.out.println("Withdraw Funds (1)\nDeposit Funds (2)\nTransfer Funds (3)"
-						+ "\nApply for a joint account (4)\nView Your Accounts (5)");
+						+ "\nApply for a joint account (4)\nView Your Account Balance (5)");
 				System.out.println("\nLogout (0)");
 
 				option = sc.nextInt();
@@ -63,10 +63,10 @@ public class AccountHolder {
 					c.transferFunds(c, sc);
 					break;
 				case 4:
-					// Apply for joint account
+					c.addJointAccount(c, sc);
 					break;
 				case 5:
-					// View all users accounts
+					c.viewBalance(c);
 					break;
 				case 0:
 					logout = true;
@@ -126,8 +126,25 @@ public class AccountHolder {
 	private void transferFunds(AccountHolder c, Scanner sc) {
 		System.out.print("How much would you like to transfer: $");
 		double amount = sc.nextDouble();
-		Accounts.transferFunds(c.accountNum, 3847, amount);
+		System.out.print("Which account would you like to transfer to:");
+		int transferIn = sc.nextInt();
+		Accounts.transferFunds(c.accountNum, transferIn, amount);
 
+	}
+	
+	private void addJointAccount(AccountHolder c, Scanner sc) {
+		PendingAccountsDao pdao = new PendingAccountsDao();
+		
+		System.out.print("Enter Account Number you would like to add:");
+		int joint = sc.nextInt();
+		pdao.addPendingAccount(c.username, c.password, c.name, c.accountNum, joint);
+		
+	}
+	
+	private void viewBalance(AccountHolder c) {
+		AccountsDao adao = new AccountsDao();
+		double balance = adao.getBalance(c.accountNum);
+		System.out.println("Primary Account Balance: $" + balance);
 	}
 
 }
